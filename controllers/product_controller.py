@@ -13,7 +13,8 @@ def add_product(data):
                 image=product_data['image'],
                 product_type=product_data['product_type'],
                 hot_item=product_data['hot_item'],
-                sub_type=product_data['sub_type']
+                sub_type=product_data['sub_type'],
+                sku=product_data['sku']
             )
             new_products.append(new_product)
             db.session.add(new_product)
@@ -28,7 +29,8 @@ def add_product(data):
             image=data['image'],
             product_type=data['product_type'],
             hot_item=data['hot_item'],
-            sub_type=data['sub_type']
+            sub_type=data['sub_type'],
+            sku=data['sku']
         )
         db.session.add(new_product)
         db.session.commit()

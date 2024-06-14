@@ -1,6 +1,10 @@
-Flask
+Flask~=3.0.3
 Flask-CORS
 Flask-JWT-Extended
 Flask-Bcrypt
 Flask-SQLAlchemy
 PyMySQL
+
+SQLAlchemy~=2.0.30
+alembic~=1.13.1
+werkzeug~=3.0.3
