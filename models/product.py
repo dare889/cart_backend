@@ -13,8 +13,9 @@ class Product(db.Model):
     product_type = Column(String(50))  # Updated field name
     hot_item = Column(Boolean, default=False)
     sub_type = Column(String(50))
+    sku = Column(String(50))  # New field
 
-    def __init__(self, name, description, price, original_price, image, product_type, hot_item, sub_type):
+    def __init__(self, name, description, price, original_price, image, product_type, hot_item, sub_type, sku):
         self.name = name
         self.description = description
         self.price = price
@@ -23,3 +24,4 @@ class Product(db.Model):
         self.product_type = product_type
         self.hot_item = hot_item
         self.sub_type = sub_type
+        self.sku = sku  # Initialize the new field

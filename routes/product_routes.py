@@ -22,7 +22,8 @@ def create_product():
             'image': product.image,
             'product_type': product.product_type,
             'hot_item': product.hot_item,
-            'sub_type': product.sub_type
+            'sub_type': product.sub_type,
+            'sku': product.sku
         })
 
     return jsonify(response_data), 201
@@ -40,7 +41,8 @@ def fetch_all_products():
             'image': product.image,
             'product_type': product.product_type,  # Updated field name
             'hot_item': product.hot_item,
-            'sub_type': product.sub_type
+            'sub_type': product.sub_type,
+            'sku': product.sku
         } for product in products
     ])
 
@@ -57,7 +59,8 @@ def fetch_product_by_id(product_id):
             'image': product.image,
             'product_type': product.product_type,  # Updated field name
             'hot_item': product.hot_item,
-            'sub_type': product.sub_type
+            'sub_type': product.sub_type,
+            'sku': product.sku
         })
     return jsonify({'message': 'Product not found'}), 404
 
