@@ -4,6 +4,7 @@ Flask-JWT-Extended
 Flask-Bcrypt
 Flask-SQLAlchemy
 PyMySQL
+cryptography==3.4.7
 
 SQLAlchemy~=2.0.30
 alembic~=1.13.1
