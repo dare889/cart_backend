@@ -4,14 +4,12 @@ from flask_bcrypt import Bcrypt
 
 bcrypt = Bcrypt()
 
-
 def register_user(username, email, password):
-    hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')  # Using bcrypt for hashing
+    hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
     new_user = User(username=username, email=email, password=hashed_password)
     db.session.add(new_user)
     db.session.commit()
     return new_user
-
 
 def authenticate_user(username, password):
     user = User.query.filter_by(username=username).first()
@@ -23,7 +21,6 @@ def authenticate_user(username, password):
     if user and bcrypt.check_password_hash(user.password, password):
         return user
     return None
-
 
 def get_user_by_id(user_id):
     return User.query.get(user_id)
