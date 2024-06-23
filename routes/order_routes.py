@@ -1,6 +1,8 @@
 from flask import Blueprint, request, jsonify
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from controllers.order_controller import create_order, get_order_by_id, get_orders_by_user, get_orders_for_user
+from db import db
+from models.order import Order
 
 order_bp = Blueprint('order', __name__)
 
@@ -27,21 +29,24 @@ def get_order_route(order_id):
 @order_bp.route('/orders', methods=['GET'])
 @jwt_required()
 def list_orders_route():
-    user_id = get_jwt_identity()['id']
-    orders = get_orders_by_user(user_id)
+    user_identity = get_jwt_identity()
+    user_id = user_identity['id']
+    orders = get_orders_for_user(user_id)
     return jsonify([order.serialize() for order in orders]), 200
 
-
-@order_bp.route('/orders', methods=['PUT'])
+@order_bp.route('orders/<int:order_id>', methods=['PUT'])
 @jwt_required()
-def update_order_status():
+def update_order_status(order_id):
     data = request.get_json()
-    order_id = data.get('order_id')
     status = data.get('status')
+    if not status:
+        return jsonify({'message': 'Status is required'}), 400
 
-    order = get_order_by_id(order_id)
-    if order:
-        order.status = status
-        db.session.commit()
-        return jsonify({'message': 'Order status updated successfully', 'order': order.serialize()}), 200
-    return jsonify({'message': 'Order not found'}), 404
+    order = Order.query.get(order_id)
+    if not order:
+        return jsonify({'message': 'Order not found'}), 404
+
+    order.status = status
+    db.session.commit()
+    return jsonify({'message': 'Order status updated successfully'}), 200
+

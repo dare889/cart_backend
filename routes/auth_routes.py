@@ -59,3 +59,4 @@ def update_user():
             'email': user.email
         }), 200
     return jsonify({'message': 'User not found'}), 404
+

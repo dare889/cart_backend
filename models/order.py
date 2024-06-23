@@ -1,22 +1,34 @@
-from sqlalchemy import Column, Integer, Float, String, ForeignKey
-from sqlalchemy.orm import relationship
+# models/order.py
 from db import db
+
+class OrderItem(db.Model):
+    __tablename__ = 'order_items'
+    id = db.Column(db.Integer, primary_key=True)
+    order_id = db.Column(db.Integer, db.ForeignKey('orders.id'), nullable=False)
+    product_id = db.Column(db.Integer, db.ForeignKey('products.id'), nullable=False)
+    quantity = db.Column(db.Integer, nullable=False)
+    price = db.Column(db.Float, nullable=False)
+    order = db.relationship('Order', back_populates='items')
+    product = db.relationship('Product', back_populates='order_items')  # Assuming you have a Product model
+
+    def serialize(self):
+        return {
+            'id': self.id,
+            'order_id': self.order_id,
+            'product_id': self.product_id,
+            'quantity': self.quantity,
+            'price': self.price,
+            'product_name': self.product.name  # Assuming product relationship is defined
+        }
 
 class Order(db.Model):
     __tablename__ = 'orders'
-
-    id = Column(Integer, primary_key=True)
-    user_id = Column(Integer, ForeignKey('users.id'), nullable=False)
-    total_price = Column(Float, nullable=False)
-    # Define relationship with User
-    user = relationship('User', back_populates='orders')
-    items = relationship('OrderItem', back_populates='order')
-    status = Column(String(50), nullable=False, default='Pending')
-
-    def __init__(self, user_id, total_price, status='Pending'):
-        self.user_id = user_id
-        self.total_price = total_price
-        self.status = status
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    total_price = db.Column(db.Float, nullable=False)
+    status = db.Column(db.String(20), nullable=False, default='Pending')
+    user = db.relationship('User', back_populates='orders')
+    items = db.relationship('OrderItem', back_populates='order')
 
     def serialize(self):
         return {
@@ -25,29 +37,4 @@ class Order(db.Model):
             'total_price': self.total_price,
             'status': self.status,
             'items': [item.serialize() for item in self.items]
-        }
-
-class OrderItem(db.Model):
-    __tablename__ = 'order_items'
-
-    id = Column(Integer, primary_key=True)
-    order_id = Column(Integer, ForeignKey('orders.id'))
-    product_id = Column(Integer, nullable=False)
-    quantity = Column(Integer, nullable=False)
-    price = Column(Float, nullable=False)
-    order = relationship('Order', back_populates='items')
-
-    def __init__(self, order_id, product_id, quantity, price):
-        self.order_id = order_id
-        self.product_id = product_id
-        self.quantity = quantity
-        self.price = price
-
-    def serialize(self):
-        return {
-            'id': self.id,
-            'order_id': self.order_id,
-            'product_id': self.product_id,
-            'quantity': self.quantity,
-            'price': self.price
         }

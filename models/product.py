@@ -1,27 +1,16 @@
-from sqlalchemy import Column, Integer, String, Float, Boolean
+# models/product.py
 from db import db
 
 class Product(db.Model):
     __tablename__ = 'products'
-
-    id = Column(Integer, primary_key=True, autoincrement=True)
-    name = Column(String(100), nullable=False)
-    description = Column(String(255))
-    price = Column(Float, nullable=False)
-    original_price = Column(Float)
-    image = Column(String(200))
-    product_type = Column(String(50))  # Updated field name
-    hot_item = Column(Boolean, default=False)
-    sub_type = Column(String(50))
-    sku = Column(String(50))  # New field
-
-    def __init__(self, name, description, price, original_price, image, product_type, hot_item, sub_type, sku):
-        self.name = name
-        self.description = description
-        self.price = price
-        self.original_price = original_price
-        self.image = image
-        self.product_type = product_type
-        self.hot_item = hot_item
-        self.sub_type = sub_type
-        self.sku = sku  # Initialize the new field
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100), nullable=False)
+    description = db.Column(db.String(255), nullable=False)
+    price = db.Column(db.Float, nullable=False)
+    original_price = db.Column(db.Float, nullable=True)
+    image = db.Column(db.String(255), nullable=True)
+    product_type = db.Column(db.String(50), nullable=False)
+    hot_item = db.Column(db.Boolean, default=False)
+    sub_type = db.Column(db.String(50), nullable=True)
+    sku = db.Column(db.String(50), nullable=False, unique=True)
+    order_items = db.relationship('OrderItem', back_populates='product')
