@@ -32,4 +32,9 @@ def get_orders_by_user(user_id):
 
 def get_orders_for_user(user_id):
     orders = Order.query.filter_by(user_id=user_id).all()
+    return orders
+
+
+def get_all_orders():
+    orders = Order.query.all()
     return [order.to_dict() for order in orders]
